@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>인스타그램 줄바꾸기 도구</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background: #fafafa; }
+        textarea { width: 90%; height: 200px; padding: 10px; border: 1px solid #dbdbdb; border-radius: 5px; }
+        button { background: #0095f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1877f2; }
+    </style>
+</head>
+<body>
+    <h2>📸 인스타 줄바꾸기 변환기</h2>
+    <textarea id="inputText" placeholder="여기에 내용을 입력하세요..."></textarea><br>
+    <button onclick="convert()">변환 및 복사하기</button>
+
+    <script>
+        function convert() {
+            const text = document.getElementById('inputText').value;
+            // 인스타그램 줄바꾸기를 위해 보이지 않는 공백 문자(\u200b)를 활용하는 로직
+            const converted = text.replace(/\n/g, '\n\u200b');
+            
+            navigator.clipboard.writeText(converted).then(() => {
+                alert('변환된 내용이 복사되었습니다! 인스타에 붙여넣으세요.');
+            });
+        }
+    </script>
+</body>
+</html>
