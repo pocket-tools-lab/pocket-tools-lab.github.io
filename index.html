@@ -2,22 +2,42 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>포켓툴즈 랩 (Pocket Tools Lab)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓툴즈 랩 | Pocket Tools Lab</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pocket-tools-lab.github.io/">
+    <meta property="og:title" content="포켓툴즈 랩 - 일상 도구 모음">
+    <meta property="og:description" content="줄바꿈, QR 생성 등 소소한 기능을 한곳에!">
+    <meta property="og:image" content="https://pocket-tools-lab.github.io/og-main.png">
+
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
-        .menu-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 500px; margin: 0 auto; }
-        .menu-item { background: white; padding: 30px; border-radius: 15px; text-decoration: none; color: #333; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
-        .menu-item:hover { transform: translateY(-5px); background: #0095f6; color: white; }
+        body { font-family: -apple-system, sans-serif; background-color: #f8f9fa; margin: 0; padding: 40px 20px; color: #333; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 25px 15px; border-radius: 15px; text-decoration: none; color: #333; font-weight: bold; border: 1px solid #eee; transition: 0.2s; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-3px); border-color: #ff69b4; color: #ff69b4; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .emoji { font-size: 24px; display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <h1>🛠️ Pocket Tools Lab</h1>
-    <p>필요한 도구를 선택하세요</p>
-    <div class="menu-container">
-        <a href="insta.html" class="menu-item">📸 인스타 줄바꿈</a>
-        <a href="qr.html" class="menu-item">🏁 QR코드 생성</a>
-        <a href="diff.html" class="menu-item">🔍 코드 비교(Diff)</a>
-        <a href="code-conv.html" class="menu-item">💻 HTML 변환</a>
+    <div class="header">
+        <h1>🛠️ Pocket Tools Lab</h1>
+        <p>일상의 소소한 불편함을 해결하는 도구 모음</p>
+    </div>
+    <div class="grid">
+        <a href="insta.html" class="card">
+            <span class="emoji">📸</span>
+            인스타 줄바꿈
+        </a>
+        <a href="#" class="card" style="opacity: 0.5; cursor: default;">
+            <span class="emoji">🏁</span>
+            QR 생성기<br>(준비중)
+        </a>
+        <a href="#" class="card" style="opacity: 0.5; cursor: default;">
+            <span class="emoji">💻</span>
+            코드 비교<br>(준비중)
+        </a>
     </div>
 </body>
 </html>
