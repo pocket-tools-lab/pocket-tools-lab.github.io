@@ -1,31 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>인스타그램 줄바꾸기 도구</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포켓툴즈 랩 (Pocket Tools Lab)</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #fafafa; }
-        textarea { width: 90%; height: 200px; padding: 10px; border: 1px solid #dbdbdb; border-radius: 5px; }
-        button { background: #0095f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #1877f2; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
+        .menu-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 500px; margin: 0 auto; }
+        .menu-item { background: white; padding: 30px; border-radius: 15px; text-decoration: none; color: #333; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
+        .menu-item:hover { transform: translateY(-5px); background: #0095f6; color: white; }
     </style>
 </head>
 <body>
-    <h2>📸 인스타 줄바꾸기 변환기</h2>
-    <textarea id="inputText" placeholder="여기에 내용을 입력하세요..."></textarea><br>
-    <button onclick="convert()">변환 및 복사하기</button>
-
-    <script>
-        function convert() {
-            const text = document.getElementById('inputText').value;
-            // 인스타그램 줄바꾸기를 위해 보이지 않는 공백 문자(\u200b)를 활용하는 로직
-            const converted = text.replace(/\n/g, '\n\u200b');
-            
-            navigator.clipboard.writeText(converted).then(() => {
-                alert('변환된 내용이 복사되었습니다! 인스타에 붙여넣으세요.');
-            });
-        }
-    </script>
+    <h1>🛠️ Pocket Tools Lab</h1>
+    <p>필요한 도구를 선택하세요</p>
+    <div class="menu-container">
+        <a href="insta.html" class="menu-item">📸 인스타 줄바꿈</a>
+        <a href="qr.html" class="menu-item">🏁 QR코드 생성</a>
+        <a href="diff.html" class="menu-item">🔍 코드 비교(Diff)</a>
+        <a href="code-conv.html" class="menu-item">💻 HTML 변환</a>
+    </div>
 </body>
 </html>
