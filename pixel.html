@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도트 그림 변환기 | Pocket Tools Lab</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pocket-tools-lab.github.io/pixel.html">
+    <meta property="og:title" content="👾 도트 그림 변환기">
+    <meta property="og:description" content="사진을 도트 아트로 변환하고 따라 그려보세요!">
+    <meta property="og:image" content="https://pocket-tools-lab.github.io/og-pixel.png">
+    
+    <link rel="icon" href="https://pocket-tools-lab.github.io/og-pixel.png" type="image/png">
+
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #fafafa; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .nav { width: 100%; max-width: 600px; margin-bottom: 20px; text-align: left; }
+        .nav a { text-decoration: none; color: #ff69b4; font-size: 14px; font-weight: bold; }
+        
+        .container { background: white; padding: 25px; border-radius: 12px; border: 1px solid #dbdbdb; width: 100%; max-width: 600px; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h2 { font-size: 20px; margin-top: 0; text-align: center; color: #333; }
+        p { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
+
+        .controls { background: #fff5fa; padding: 20px; border-radius: 10px; border: 1px solid #ffceee; margin-bottom: 20px; }
+        input[type="file"] { width: 100%; margin-bottom: 15px; font-size: 13px; }
+        
+        .slider-group { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .slider-group label { font-size: 14px; font-weight: bold; color: #ff69b4; min-width: 60px; }
+        input[type="range"] { flex-grow: 1; accent-color: #ff69b4; }
+        #sizeVal { font-weight: bold; color: #ff69b4; min-width: 50px; }
+
+        #canvas { 
+            width: 100%; 
+            max-width: 400px; 
+            border: 3px solid #ffceee; 
+            background: #eee;
+            image-rendering: pixelated; /* 도트가 깨지지 않고 각지게 보이게 함 */
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        button { 
+            background-color: #ff69b4; 
+            color: white; 
+            border: none; 
+            padding: 14px 0; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 15px; 
+            transition: 0.2s;
+        }
+        button:hover { background-color: #ff4da6; }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a href="index.html">← 홈으로 돌아가기</a>
+    </div>
+
+    <div class="container">
+        <h2>👾 도트 그림 변환기</h2>
+        <p>사진을 불러와서 따라 그리기 쉬운 도트로 바꿔보세요!</p>
+        
+        <div class="controls">
+            <input type="file" id="upload" accept="image/*">
+            <div class="slider-group">
+                <label>도트 크기</label>
+                <input type="range" id="sizeRange" min="8" max="128" value="32">
+                <span id="sizeVal">32 px</span>
+            </div>
+            <button onclick="downloadImg()">이미지 저장하기</button>
+        </div>
+
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        const upload = document.getElementById('upload');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const sizeRange = document.getElementById('sizeRange');
+        const sizeVal = document.getElementById('sizeVal');
+        
+        let originalImg = null;
+
+        // 파일 업로드 처리
+        upload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImg = img;
+                    drawPixelated();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 슬라이더 조절 시 실시간 변환
+        sizeRange.addEventListener('input', () => {
+            sizeVal.innerText = sizeRange.value + " px";
+            if (originalImg) drawPixelated();
+        });
+
+        function drawPixelated() {
+            const size = parseInt(sizeRange.value);
+            
+            // 가로세로 비율 유지하며 캔버스 크기 설정 (저해상도)
+            const ratio = originalImg.height / originalImg.width;
+            canvas.width = size;
+            canvas.height = size * ratio;
+
+            // 이미지를 작게 그려서 픽셀화 시킴
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+        }
+
+        // 결과 이미지 다운로드
+        function downloadImg() {
+            if (!originalImg) {
+                alert('먼저 이미지를 업로드해주세요!');
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = 'my-pixel-art.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
