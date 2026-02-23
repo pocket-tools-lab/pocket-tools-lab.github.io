@@ -6,47 +6,55 @@
     <title>도트 & 아스키 아트 변환기 | Pocket Tools Lab</title>
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pocket-tools-lab.github.io/pixel.html">
     <meta property="og:title" content="👾 도트 & 아스키 아트 변환기">
-    <meta property="og:description" content="픽셀 정밀 조절부터 색상 추출, 카톡 복붙용 아스키 아트까지!">
+    <meta property="og:description" content="픽셀 정밀 조절부터 중복 없는 색상 추출까지!">
     <meta property="og:image" content="https://pocket-tools-lab.github.io/og-pixel.png">
     <link rel="icon" href="https://pocket-tools-lab.github.io/og-pixel.png" type="image/png">
 
     <style>
         :root { --main-pink: #ff69b4; --light-pink: #fff5fa; --border-pink: #ffceee; }
-        body { font-family: -apple-system, sans-serif; background-color: #fafafa; margin: 0; padding: 20px; color: #333; }
+        body { 
+            font-family: -apple-system, sans-serif; background-color: #fafafa; margin: 0; padding: 20px; color: #333;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
         .nav { max-width: 950px; margin: 0 auto 10px; }
         .nav a { text-decoration: none; color: var(--main-pink); font-weight: bold; font-size: 14px; }
-        
         .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 20px; border: 1px solid #dbdbdb; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         
-        /* 탭 스타일 */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-pink); }
-        .tab-btn { padding: 12px 25px; border: none; background: none; font-weight: bold; cursor: pointer; color: #999; font-size: 16px; }
+        h2 { font-size: 22px; margin-top: 0; margin-bottom: 20px; color: var(--main-pink); text-align: center; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--border-pink); }
+        .tab-btn { padding: 12px 25px; border: none; background: none; font-weight: bold; cursor: pointer; color: #999; font-size: 16px; transition: 0.3s; }
         .tab-btn.active { color: var(--main-pink); border-bottom: 3px solid var(--main-pink); }
         
         .tab-content { display: none; grid-template-columns: 1fr 350px; gap: 25px; }
         .tab-content.active { display: grid; }
         @media (max-width: 850px) { .tab-content.active { grid-template-columns: 1fr; } }
 
-        /* 공통 스타일 */
-        #canvas, #asciiResult { width: 100%; border: 4px solid var(--border-pink); border-radius: 15px; background: #f0f0f0; image-rendering: pixelated; }
-        #asciiResult { height: 450px; font-family: monospace; font-size: 8px; line-height: 1; white-space: pre; overflow: auto; padding: 10px; background: #222; color: #00ff00; border-color: #444; }
+        .viewer-section { text-align: center; }
+        #canvas, #asciiResult { width: 100%; border: 4px solid var(--border-pink); border-radius: 15px; background: #f0f0f0; image-rendering: pixelated; box-sizing: border-box; }
+        #asciiResult { 
+            height: 450px; font-family: monospace; font-size: 8px; line-height: 1; white-space: pre; 
+            overflow: auto; padding: 10px; background: #1a1a1a; color: #00ff00; border-color: #333;
+            user-select: text; 
+        }
         
         .controls { background: var(--light-pink); padding: 20px; border-radius: 15px; border: 1px solid var(--border-pink); height: fit-content; }
         .label-group { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-weight: bold; font-size: 13px; }
         
-        input[type="number"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-pink); margin-top: 5px; outline: none; box-sizing: border-box; }
-        input[type="range"] { width: 100%; accent-color: var(--main-pink); margin-top: 5px; }
+        input[type="number"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-pink); margin-top: 5px; outline: none; box-sizing: border-box; font-size: 14px; }
+        input[type="range"] { width: 100%; accent-color: var(--main-pink); margin-top: 5px; cursor: pointer; }
         
-        .btn-main { background: var(--main-pink); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; transition: 0.2s; }
-        .btn-main:hover { background: #ff4da6; transform: translateY(-2px); }
+        .btn-main { background: var(--main-pink); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; transition: 0.2s; box-shadow: 0 4px 0 #d44d91; }
+        .btn-main:hover { background: #ff4da6; transform: translateY(-1px); }
+        .btn-main:active { transform: translateY(2px); box-shadow: none; }
 
-        /* 컬러 팔레트 구역 */
-        .color-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; margin-top: 10px; max-height: 150px; overflow-y: auto; padding: 10px; background: white; border-radius: 8px; border: 1px solid var(--border-pink); }
+        .color-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 8px; margin-top: 10px; max-height: 180px; overflow-y: auto; padding: 10px; background: white; border-radius: 8px; border: 1px solid var(--border-pink); }
         .color-item { text-align: center; }
-        .color-box { width: 100%; height: 25px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 4px; }
-        .color-code { font-size: 9px; color: #888; }
+        .color-box { width: 100%; height: 28px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 4px; }
+        .color-code { font-size: 9px; color: #888; font-family: monospace; }
+        
+        .pixel-badge { display: inline-block; padding: 4px 12px; background: var(--main-pink); color: white; border-radius: 20px; font-size: 14px; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -54,7 +62,7 @@
     <div class="nav"><a href="index.html">← 홈으로 돌아가기</a></div>
 
     <div class="container">
-        <h2>👾 도트 & 아스크 아트 랩</h2>
+        <h2>👾 도트 & 아스키 아트 변환기</h2>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="openTab(event, 'imageTab')">이미지 도트 (.PNG)</button>
@@ -62,64 +70,70 @@
         </div>
 
         <div style="margin-bottom: 20px;">
-            <label style="font-weight: bold; font-size: 14px;">파일 업로드: </label>
+            <label style="font-weight: bold; font-size: 14px;">📁 이미지 업로드: </label>
             <input type="file" id="upload" accept="image/*">
         </div>
 
         <div id="imageTab" class="tab-content active">
-            <div class="viewer">
+            <div class="viewer-section">
                 <canvas id="canvas"></canvas>
-                <p id="pixelRes" style="font-weight: bold; color: var(--main-pink); margin-top: 10px;">이미지를 업로드 해주세요</p>
+                <div><span id="pixelRes" class="pixel-badge">이미지 대기 중</span></div>
+                <button class="btn-main" onclick="downloadImg()">💾 고해상도 이미지 저장</button>
             </div>
+            
             <div class="controls">
                 <div class="label-group"><label>픽셀 크기 (가로)</label> <span id="rangeLabel" style="color:var(--main-pink)">32px</span></div>
                 <input type="range" id="sizeRange" min="8" max="256" value="32">
                 <input type="number" id="sizeInput" value="32">
 
-                <div class="label-group"><label>색상 모드</label></div>
+                <div class="label-group"><label>색상 구성 (Palette)</label></div>
                 <select id="colorSelect">
-                    <option value="0">원본 색상 유지</option>
+                    <option value="0">원본 색상</option>
                     <option value="8">8색 레트로</option>
                     <option value="16">16색 게임보이</option>
-                    <option value="256">256색 고전PC</option>
-                    <option value="gray">8단계 흑백 명암</option>
-                    <option value="bw">단순 2색 (B&W)</option>
+                    <option value="32">32색 표준</option>
+                    <option value="256">256색 8비트</option>
+                    <option value="gray">8단계 흑백</option>
+                    <option value="bw">단순 2색</option>
                 </select>
 
-                <div class="label-group"><label>저장 배율 선택</label></div>
+                <div class="label-group"><label>저장 배율</label></div>
                 <select id="downloadScale">
-                    <option value="1">1배 (원본 크기)</option>
-                    <option value="5">5배 크게</option>
-                    <option value="10" selected>10배 크게 (권장)</option>
-                    <option value="20">20배 크게</option>
+                    <option value="1">1배</option>
+                    <option value="10" selected>10배</option>
+                    <option value="20">20배</option>
                 </select>
 
-                <div class="label-group"><label>🎨 사용된 색상 (최대 40개)</label></div>
+                <div class="label-group"><label>🎨 사용된 색상 (중복 제거됨)</label></div>
                 <div id="colorList" class="color-list"></div>
-
-                <button class="btn-main" onclick="downloadImg()">PNG 이미지 저장</button>
             </div>
         </div>
 
         <div id="textTab" class="tab-content">
-            <div class="viewer"><textarea id="asciiResult" readonly></textarea></div>
+            <div class="viewer-section">
+                <textarea id="asciiResult" readonly></textarea>
+                <button class="btn-main" onclick="copyAscii()">📋 텍스트 아트 복사하기</button>
+            </div>
             <div class="controls">
-                <div class="label-group"><label>텍스트 밀도</label><span id="asciiVal" style="color:var(--main-pink)">50</span></div>
-                <input type="range" id="asciiRange" min="20" max="120" value="50">
-                <p style="font-size:12px; color:#666; line-height:1.6; margin-top:20px;">
-                    보내주신 사진처럼 점자 유니코드를 사용하여 커뮤니티 복붙이 가능한 형태로 변환합니다.
-                </p>
-                <button class="btn-main" onclick="copyAscii()">📋 텍스트 아트 복사</button>
+                <div class="label-group"><label>문자 밀도</label><span id="asciiVal" style="color:var(--main-pink)">50</span></div>
+                <input type="range" id="asciiRange" min="20" max="150" value="50">
             </div>
         </div>
     </div>
 
     <script>
+        // 소스 보호 로직
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        };
+
         let originalImg = null;
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
-        // 요소 연결
         const sizeRange = document.getElementById('sizeRange');
         const sizeInput = document.getElementById('sizeInput');
         const colorSelect = document.getElementById('colorSelect');
@@ -135,20 +149,26 @@
         }
 
         document.getElementById('upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const img = new Image();
                 img.onload = () => { originalImg = img; process(); };
                 img.src = ev.target.result;
             };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(file);
         });
 
-        // 이미지 설정 동기화
-        sizeRange.oninput = () => { sizeInput.value = sizeRange.value; document.getElementById('rangeLabel').innerText = sizeRange.value + "px"; process(); };
-        sizeInput.oninput = () => { sizeRange.value = sizeInput.value; document.getElementById('rangeLabel').innerText = sizeInput.value + "px"; process(); };
+        // 숫자 입력 & 슬라이더 양방향 동기화
+        sizeRange.oninput = () => { sizeInput.value = sizeRange.value; updateLabel(); process(); };
+        sizeInput.oninput = () => { sizeRange.value = sizeInput.value; updateLabel(); process(); };
         colorSelect.onchange = process;
         asciiRange.oninput = () => { document.getElementById('asciiVal').innerText = asciiRange.value; process(); };
+
+        function updateLabel() {
+            document.getElementById('rangeLabel').innerText = sizeRange.value + "px";
+        }
 
         function process() {
             if(!originalImg) return;
@@ -157,7 +177,7 @@
             // 1. 이미지 도트 처리
             const s1 = parseInt(sizeInput.value) || 32;
             canvas.width = s1; canvas.height = Math.round(s1 * ratio);
-            document.getElementById('pixelRes').innerText = `현재 해상도: ${canvas.width} X ${canvas.height}`;
+            document.getElementById('pixelRes').innerText = `${canvas.width} X ${canvas.height}`;
             
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
@@ -166,7 +186,7 @@
             if(mode !== "0") applyColorLimit(mode);
             extractColors();
 
-            // 2. 텍스트 도트 처리
+            // 2. 아스키 아트 처리
             const s2 = parseInt(asciiRange.value);
             const tW = s2; const tH = Math.round(s2 * ratio * 0.5);
             const tCanvas = document.createElement('canvas');
@@ -178,8 +198,7 @@
             for(let y=0; y<tH; y++){
                 for(let x=0; x<tW; x++){
                     const i = (y * tW + x) * 4;
-                    const avg = (pix[i] + pix[i+1] + pix[i+2]) / 3;
-                    res += avg < 128 ? "⣿" : "⠀";
+                    res += (pix[i]+pix[i+1]+pix[i+2])/3 < 127 ? "⣿" : "⠀";
                 }
                 res += "\n";
             }
@@ -195,10 +214,14 @@
                     const avg = (r + g + b) / 3;
                     data[i] = data[i+1] = data[i+2] = Math.round(avg / 32) * 32;
                 } else if (mode === 'bw') {
-                    data[i] = data[i+1] = data[i+2] = (r+g+b)/3 > 128 ? 255 : 0;
+                    const val = (r+g+b)/3 > 128 ? 255 : 0;
+                    data[i] = data[i+1] = data[i+2] = val;
                 } else {
-                    const step = Math.floor(256 / Math.pow(parseInt(mode), 1/3));
-                    data[i] = Math.round(r/step)*step; data[i+1] = Math.round(g/step)*step; data[i+2] = Math.round(b/step)*step;
+                    const count = parseInt(mode);
+                    const step = Math.floor(256 / Math.pow(count, 1/3));
+                    data[i] = Math.round(r/step)*step;
+                    data[i+1] = Math.round(g/step)*step;
+                    data[i+2] = Math.round(b/step)*step;
                 }
             }
             ctx.putImageData(imgData, 0, 0);
@@ -231,7 +254,7 @@
             tCtx.imageSmoothingEnabled = false;
             tCtx.drawImage(canvas, 0, 0, temp.width, temp.height);
             const link = document.createElement('a');
-            link.download = 'pixel-art.png';
+            link.download = `pixel-art-${canvas.width}x${canvas.height}.png`;
             link.href = temp.toDataURL();
             link.click();
         }
@@ -239,7 +262,7 @@
         function copyAscii() {
             asciiResult.select();
             document.execCommand('copy');
-            alert('텍스트 아트가 복사되었습니다!');
+            alert('복사 완료!');
         }
     </script>
 </body>
