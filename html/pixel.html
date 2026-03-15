@@ -173,9 +173,7 @@
             tCanvas.width = textWidth;
             tCanvas.height = textHeight;
             
-            // [핵심 수정] 원본 이미지를 (0,0) 위치부터 (textWidth, textHeight) 크기로 '압축'해서 그립니다.
-            // 이렇게 해야 이미지가 짤리지 않고 전체가 캔버스 안에 다 들어옵니다.
-            tCtx.filter = 'contrast(1.5) grayscale(1)'; 
+            tCtx.clearRect(0, 0, textWidth, textHeight);
             tCtx.drawImage(originalImg, 0, 0, originalImg.width, originalImg.height, 0, 0, textWidth, textHeight);
             
             const pixData = tCtx.getImageData(0, 0, textWidth, textHeight).data;
@@ -185,11 +183,10 @@
                 for(let x=0; x<textWidth; x++){
                     const i = (y * textWidth + x) * 4;
                     const r = pixData[i], g = pixData[i+1], b = pixData[i+2], a = pixData[i+3];
-                    
                     const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
                     
-                    // 투명도나 밝기를 체크해서 문자를 결정
-                    if(a < 50 || brightness > 200) { 
+                    // 투명하거나 밝은 부분은 빈 칸(☆), 어두운 선은 채운 칸(★)
+                    if(a < 50 || brightness > 180) { 
                         asciiStr += light;
                     } else {
                         asciiStr += dark;
@@ -197,7 +194,7 @@
                 }
                 asciiStr += "\n";
             }
-            asciiResult.value = asciiStr.trim();
+            asciiResult.value = asciiStr;
             
             // 말풍선 높이 자동 조절
             asciiResult.style.height = 'auto';
