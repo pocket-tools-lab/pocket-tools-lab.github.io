@@ -218,19 +218,16 @@ input[type="range"] {
 }
 
 #asciiResult { 
-    font-family: "Courier New", Courier, monospace; 
-    font-size: 10px;       /* 글씨를 살짝 줄여서 한 눈에 들어오게 */
-    line-height: 1.0; 
-    white-space: pre;      /* 줄바꿈 유지 중요! */
+    font-family: "Courier New", monospace; 
+    font-size: 14px;      /* 카톡과 비슷한 느낌을 위해 살짝 키움 */
+    line-height: 1.1; 
+    white-space: pre; 
     background: none; 
     border: none; 
     outline: none; 
-    resize: none; 
     width: 100%; 
-    display: block;
-    color: #000; 
-    text-align: center;    /* 텍스트 중앙 정렬 */
-    overflow: hidden;
+    text-align: center;   /* 왼쪽으로 쏠리지 않게 중앙 정렬 */
+    letter-spacing: -1px; /* 글자 사이 간격을 좁혀서 도트가 이어져 보이게 함 */
 }
 
 .kakao-bubble::after {
