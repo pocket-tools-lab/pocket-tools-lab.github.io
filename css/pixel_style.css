@@ -192,3 +192,61 @@ input[type="range"] {
 }
 
 .info-txt { font-size: 11px; color: #777; margin-top: 8px; line-height: 1.4; }
+
+/* 카카오톡 레이아웃 스타일 (추가분) */
+.kakao-preview { 
+    background-color: #BACEE0; 
+    padding: 20px; 
+    border-radius: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-end;
+    max-height: 500px; 
+    overflow-y: auto; 
+    border: 1px solid #aebecb;
+}
+
+.kakao-bubble {
+    background-color: #FEE500; 
+    padding: 12px; 
+    border-radius: 8px;
+    position: relative; 
+    margin-right: 10px; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    max-width: 90%;
+}
+
+.kakao-bubble::after {
+    content: ''; 
+    position: absolute; 
+    right: -8px; 
+    top: 10px;
+    border-left: 10px solid #FEE500; 
+    border-top: 5px solid transparent; 
+    border-bottom: 5px solid transparent;
+}
+
+#asciiResult { 
+    font-family: "Courier New", Courier, monospace; 
+    font-size: 11px; 
+    line-height: 1.1; 
+    white-space: pre; 
+    background: none; 
+    border: none; 
+    outline: none; 
+    resize: none; 
+    width: 100%; 
+    height: auto;
+    color: #000; 
+    user-select: text; 
+    text-align: left; 
+    overflow: hidden;
+}
+
+.info-txt { 
+    font-size: 11px; 
+    color: #777; 
+    margin-top: 8px; 
+    line-height: 1.4; 
+    text-align: left; 
+}
