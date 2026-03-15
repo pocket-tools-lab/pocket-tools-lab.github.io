@@ -200,11 +200,9 @@ input[type="range"] {
     border-radius: 15px; 
     display: flex; 
     flex-direction: column; 
-    /* align-items: flex-end; 를 삭제하거나 아래처럼 center로 변경 */
-    align-items: center; 
+    align-items: center; /* 일단 중앙으로 정렬해서 잘림 방지 */
     max-height: 500px; 
-    overflow-x: auto; /* 가로 스크롤 허용 */
-    overflow-y: auto; 
+    overflow: auto; 
     border: 1px solid #aebecb;
 }
 
@@ -213,39 +211,36 @@ input[type="range"] {
     padding: 12px; 
     border-radius: 8px;
     position: relative; 
-    /* 말풍선 꼬리 위치 조절을 위해 margin-right 삭제 */
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    width: fit-content; /* 내용물 크기에 딱 맞게 */
-    max-width: 100%; 
+    width: fit-content;    /* 내용물 크기에 맞게 조절 */
+    min-width: 100px;      /* 최소 너비 보장 */
+    max-width: 95%;       /* 너무 꽉 차지 않게 */
+}
+
+#asciiResult { 
+    font-family: "Courier New", Courier, monospace; 
+    font-size: 10px;       /* 글씨를 살짝 줄여서 한 눈에 들어오게 */
+    line-height: 1.0; 
+    white-space: pre;      /* 줄바꿈 유지 중요! */
+    background: none; 
+    border: none; 
+    outline: none; 
+    resize: none; 
+    width: 100%; 
+    display: block;
+    color: #000; 
+    text-align: center;    /* 텍스트 중앙 정렬 */
+    overflow: hidden;
 }
 
 .kakao-bubble::after {
     content: ''; 
     position: absolute; 
-    left: -8px;      /* right 대신 left 사용 */
-    right: auto;     /* 기존 right 값 초기화 */
+    right: -8px; 
     top: 10px;
-    border-right: 10px solid #FEE500; /* border-left 대신 border-right */
-    border-left: none;
+    border-left: 10px solid #FEE500; 
     border-top: 5px solid transparent; 
     border-bottom: 5px solid transparent;
-}
-
-#asciiResult { 
-    font-family: "Courier New", Courier, monospace; 
-    font-size: 11px; 
-    line-height: 1.1; 
-    white-space: pre; 
-    background: none; 
-    border: none; 
-    outline: none; 
-    resize: none; 
-    width: 100%; /* 부모 너비에 맞춤 */
-    height: auto;
-    color: #000; 
-    user-select: text; 
-    text-align: center; /* 텍스트 자체를 중앙 정렬 */
-    overflow: hidden;
 }
 
 .info-txt { 
