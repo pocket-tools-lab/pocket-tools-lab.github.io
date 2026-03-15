@@ -145,48 +145,45 @@
         function process() {
             if(!originalImg) return;
             const ratio = originalImg.height / originalImg.width;
-
-            // 1. 이미지 도트 처리 (기존 로직 유지)
+        
+            // 1. 이미지 도트 처리 (기존 PNG 저장용 로직 - 그대로 유지)
             const s1 = parseInt(sizeInput.value) || 32;
             canvas.width = s1; canvas.height = Math.round(s1 * ratio);
-            document.getElementById('pixelRes').innerText = `${canvas.width} X ${canvas.height}`;
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
-            const mode = colorSelect.value;
-            if(mode !== "0") applyColorLimit(mode);
+            if(colorSelect.value !== "0") applyColorLimit(colorSelect.value);
             extractColors();
-
-            // 2. 텍스트 도트 처리 (잘림 현상 해결 & 선명도 강화)
+        
+            // 2. [수정됨] 텍스트 도트 처리 - 무조건 18자 폭에 맞춰 압축
             const charSet = {
-                square: ['■', '□'],
-                circle: ['●', '○'],
-                heart: ['♥', '♡'],
-                star: ['★', '☆']
+                square: ['■', '□'], circle: ['●', '○'],
+                heart: ['♥', '♡'], star: ['★', '☆']
             };
             const [dark, light] = charSet[charModeSelect.value];
             
-            const textWidth = parseInt(asciiRange.value); 
+            const textWidth = 18; // 18자로 강제 고정
             const textHeight = Math.round(textWidth * ratio); 
             
             const tCanvas = document.createElement('canvas');
             const tCtx = tCanvas.getContext('2d');
             tCanvas.width = textWidth;
             tCanvas.height = textHeight;
-            
-            tCtx.clearRect(0, 0, textWidth, textHeight);
+        
+            // 핵심: 원본 이미지 전체를 (0,0,원본폭,원본높이) 가져와서 18자 크기로 꽉 채워 그립니다.
             tCtx.drawImage(originalImg, 0, 0, originalImg.width, originalImg.height, 0, 0, textWidth, textHeight);
-            
+        
             const pixData = tCtx.getImageData(0, 0, textWidth, textHeight).data;
             let asciiStr = "";
-            
+        
             for(let y=0; y<textHeight; y++){
                 for(let x=0; x<textWidth; x++){
                     const i = (y * textWidth + x) * 4;
+                    // 밝기 계산 (투명도 포함)
                     const r = pixData[i], g = pixData[i+1], b = pixData[i+2], a = pixData[i+3];
-                    const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-                    
-                    // 투명하거나 밝은 부분은 빈 칸(☆), 어두운 선은 채운 칸(★)
-                    if(a < 50 || brightness > 180) { 
+                    const bright = (r + g + b) / 3;
+        
+                    // 배경이 투명하거나(a < 128) 밝으면 빈칸, 어두우면 채운칸
+                    if(a < 128 || bright > 180) {
                         asciiStr += light;
                     } else {
                         asciiStr += dark;
@@ -194,11 +191,13 @@
                 }
                 asciiStr += "\n";
             }
-            asciiResult.value = asciiStr;
+        
+            const resultArea = document.getElementById('asciiResult');
+            resultArea.value = asciiStr.trim();
             
-            // 말풍선 높이 자동 조절
-            asciiResult.style.height = 'auto';
-            asciiResult.style.height = (asciiResult.scrollHeight) + 'px';
+            // 카톡 레이아웃 높이 자동 조절
+            resultArea.style.height = 'auto';
+            resultArea.style.height = (resultArea.scrollHeight) + 'px';
         }
 
         // 이미지 도트 관련 함수 (기존과 동일)
