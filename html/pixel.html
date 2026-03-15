@@ -156,7 +156,7 @@
             if(mode !== "0") applyColorLimit(mode);
             extractColors();
 
-            // 2. 텍스트 도트 처리 (카톡 최적화 - 독립 실행)
+            // 2. 텍스트 도트 처리 (카톡 최적화 로직 보정)
             const charSet = {
                 square: ['■', '□'],
                 circle: ['●', '○'],
@@ -165,13 +165,15 @@
             };
             const [dark, light] = charSet[charModeSelect.value];
             
-            const textWidth = parseInt(asciiRange.value);
-            const textHeight = Math.round(textWidth * ratio); // 1:1 비율
+            const textWidth = parseInt(asciiRange.value); // 사용자님이 설정한 카톡 폭 (예: 18자)
+            const textHeight = Math.round(textWidth * ratio); 
             
             const tCanvas = document.createElement('canvas');
             const tCtx = tCanvas.getContext('2d');
             tCanvas.width = textWidth;
             tCanvas.height = textHeight;
+            
+            // 사진을 카톡 크기만큼 작게 그립니다 (이게 핵심!)
             tCtx.drawImage(originalImg, 0, 0, textWidth, textHeight);
             
             const pixData = tCtx.getImageData(0, 0, textWidth, textHeight).data;
@@ -180,11 +182,17 @@
             for(let y=0; y<textHeight; y++){
                 for(let x=0; x<textWidth; x++){
                     const i = (y * textWidth + x) * 4;
-                    const brightness = (pixData[i] + pixData[i+1] + pixData[i+2]) / 3;
-                    const alpha = pixData[i+3];
+                    const r = pixData[i];
+                    const g = pixData[i+1];
+                    const b = pixData[i+2];
+                    const a = pixData[i+3];
                     
-                    // 투명도가 낮거나 밝으면 lightChar
-                    if(alpha < 128 || brightness > 127) {
+                    // 밝기 계산 (그레이스케일 표준 공식)
+                    const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+                    
+                    // 투명하거나(배경이 없을 때) 아주 밝은(흰색 배경) 부분은 lightChar
+                    // 테두리처럼 어두운 부분은 darkChar로 확실히 구분
+                    if(a < 50 || brightness > 180) { 
                         asciiStr += light;
                     } else {
                         asciiStr += dark;
