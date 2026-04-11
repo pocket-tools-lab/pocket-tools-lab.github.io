@@ -65,19 +65,24 @@ h2 { font-size: 22px; margin-top: 0; margin-bottom: 20px; color: var(--main-pink
     border-radius: 15px; 
     display: flex; 
     flex-direction: column; 
-    align-items: flex-end;
+    /* 핵심: 내 메시지는 오른쪽 끝으로 붙도록 설정 */
+    align-items: flex-end; 
     height: 450px; 
     overflow-y: auto; 
     border: 1px solid #aebecb;
+    box-sizing: border-box;
 }
 
 .kakao-bubble {
     background-color: var(--kakao-yellow); 
-    padding: 10px; 
+    padding: 10px 12px; 
     border-radius: 8px;
     position: relative; 
+    /* 오른쪽 꼬리표 공간 확보 */
     margin-right: 10px; 
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    width: fit-content;    /* 내용에 맞게 가로폭 조절 */
+    max-width: 90%;        /* 화면 밖으로 나가는 것 방지 */
 }
 
 .kakao-bubble::after {
@@ -92,8 +97,10 @@ h2 { font-size: 22px; margin-top: 0; margin-bottom: 20px; color: var(--main-pink
 
 #asciiResult { 
     font-family: "Courier New", Courier, monospace; 
-    font-size: 10px; 
-    line-height: 1.1; 
+    /* 모바일 가독성을 위해 12~14px 추천 */
+    font-size: 14px; 
+    line-height: 1.0;     /* 도트 사이 세로 틈 제거 */
+    letter-spacing: 0px;  /* 가로 틈 조절 (필요시 -1px) */
     white-space: pre; 
     background: none; 
     border: none; 
@@ -103,7 +110,9 @@ h2 { font-size: 22px; margin-top: 0; margin-bottom: 20px; color: var(--main-pink
     height: auto;
     color: #000; 
     user-select: text; 
+    /* 도트 모양이 깨지지 않게 왼쪽 정렬 유지 */
     text-align: left;
+    overflow-x: hidden;   /* 가로 잘림 방지 */
 }
 
 /* 컨트롤러 및 입력 창 */
